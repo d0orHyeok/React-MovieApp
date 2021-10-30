@@ -1,5 +1,4 @@
 import React from "react";
-import { Icon } from "antd";
 import { SmileOutlined } from "@ant-design/icons";
 
 function Footer() {
