@@ -7,16 +7,28 @@ import Axios from "axios";
 
 function LandingPage() {
     const [Movies, setMovies] = useState([]);
-    const [MainMovieImage, setMainMovieImage] = useState("");
+    const [MainMovieImage, setMainMovieImage] = useState(null);
+    const [PageNum, setPageNum] = useState(0);
 
     useEffect(() => {
         const endpoint = `${API_URL}movie/popular?api_key=${API_KEY}&language=en-US&page=1`;
-
-        Axios.get(endpoint).then((response) => {
-            setMovies(response.data.results);
-            setMainMovieImage(response.data.results[0]);
-        });
+        getMovies(endpoint);
     }, []);
+
+    const getMovies = (endpoint) => {
+        Axios.get(endpoint).then((response) => {
+            if (!MainMovieImage) setMainMovieImage(response.data.results[0]);
+            setMovies([...Movies, ...response.data.results]);
+            setPageNum(response.data.page);
+        });
+    };
+
+    const loadMoreItems = () => {
+        const endpoint = `${API_URL}movie/popular?api_key=${API_KEY}&language=en-US&page=${
+            PageNum + 1
+        }`;
+        getMovies(endpoint);
+    };
 
     return (
         <div style={{ width: "100%", margin: "0" }}>
@@ -35,7 +47,7 @@ function LandingPage() {
                 <Row gutter={[10, 10]}>
                     {Movies &&
                         Movies.map((movie, index) => (
-                            <React.Fragment>
+                            <React.Fragment key={index}>
                                 <GridCards
                                     image={
                                         movie.poster_path
@@ -50,7 +62,7 @@ function LandingPage() {
                 </Row>
             </div>
             <div style={{ display: "flex", justifyContent: "center" }}>
-                <button>Load More</button>
+                <button onClick={loadMoreItems}>Load More</button>
             </div>
         </div>
     );
