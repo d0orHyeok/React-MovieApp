@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Axios from "axios";
-import { Row } from "antd";
+import { Row, Button } from "antd";
 import { API_URL, API_KEY, IMAGE_BASE_URL } from "../../Config";
 import MainImage from "../Commons/MainImage";
 import MovieInfo from "./Sections/MovieInfo";
 import GridCards from "../Commons/GridCards";
+import Favorite from "./Sections/Favorite";
 
 function MovieDetail(props) {
     const [Movie, setMovie] = useState([]);
@@ -42,12 +43,20 @@ function MovieDetail(props) {
 
             {/* body */}
             <div style={{ width: "85%", margin: "1rem auto" }}>
+                <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                    <Favorite
+                        movieInfo={Movie}
+                        movieId={movieId}
+                        userFrom={localStorage.getItem("userId")}
+                    />
+                </div>
+
                 {/* Movie Info */}
                 <MovieInfo movie={Movie} />
                 <br />
                 {/* Actors Grid */}
                 <div style={{ display: "flex", justifyContent: "center", margin: "2rem" }}>
-                    <button onClick={toggleActorView}>Toggle Actor View</button>
+                    <Button onClick={toggleActorView}>Toggle Actor View</Button>
                 </div>
 
                 {ActorToggle && (
